@@ -8,6 +8,28 @@ Identify a hash algorithm by matching it against known formats (length, characte
 
 Give it a hash, get back ranked candidate algorithms with a short note for each. No network, no installs beyond Python 3, standard library only.
 
+## Contents
+
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Supported algorithms](#supported-algorithms)
+- [Install](#install)
+- [Usage](#usage)
+  - [Real examples](#real-examples)
+- [How it works](#how-it-works)
+- [Ethical use](#ethical-use)
+- [License](#license)
+
+## Screenshots
+
+Batch identification of an MD5, a SHA-256, a bcrypt hash, and a garbage input:
+
+![Batch identification demo](docs/images/demo.png)
+
+Full `--help` output:
+
+![Help output](docs/images/help.png)
+
 ## Features
 
 - **Format-based identification**: regex signature table covering MD5, SHA-1, SHA-224/256/384/512, bcrypt, Argon2, scrypt, SHA-512/256 crypt, MD5 crypt, PBKDF2, MySQL 4.1+, DES crypt, CRC32, and more.
@@ -73,7 +95,9 @@ Exit codes: `0` when at least one candidate matched, `1` for no match or a usage
 
 ### Real examples
 
-MD5 of "password" (from `hashlib.md5(b"password").hexdigest()`):
+All outputs below are real runs of `hashid.py` (v1.0.0). The MD5 and SHA-256 were produced with `hashlib.md5(b"password")` / `hashlib.sha256(b"password")`.
+
+MD5 of "password":
 
 ```bash
 $ python3 hashid.py 5f4dcc3b5aa765d61d8327deb882cf99
@@ -145,6 +169,10 @@ $ python3 hashid.py -f hashes.txt --json
 ## How it works
 
 `hashid.py` holds a signature table: an ordered list of `(regex, candidate names, note)` entries. Specific formats (modular crypt prefixes like `$2b$`, `$6$`, `$argon2id$`) are checked before generic hex-length formats, so a bcrypt hash never falls through to a length guess. The first entry that matches wins its rank; every matching entry is reported, most specific first.
+
+## Ethical use
+
+This tool identifies hash formats. It is built for defensive security work, CTF practice, forensics, and legitimate penetration testing you are authorized to perform. Do not use it against systems, hashes, or data you do not have permission to analyze.
 
 ## License
 
